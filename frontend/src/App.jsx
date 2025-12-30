@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Tasks from './pages/Tasks';
 import Spinner from './components/Spinner';
 
 // Redirect authenticated users away from auth pages
@@ -55,6 +56,16 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <UserDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Protected Tasks Route */}
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute>
+            <Tasks />
           </ProtectedRoute>
         }
       />

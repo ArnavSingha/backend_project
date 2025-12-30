@@ -44,18 +44,40 @@ const Navbar = () => {
                   >
                     My Profile
                   </Link>
+                  <Link
+                    to="/tasks"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/tasks')
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    Tasks
+                  </Link>
                 </>
               ) : (
-                <Link
-                  to="/dashboard"
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive('/dashboard')
-                      ? 'bg-primary-100 text-primary-700'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
-                >
-                  My Profile
-                </Link>
+                <>
+                  <Link
+                    to="/dashboard"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/dashboard')
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/tasks"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/tasks')
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    Tasks
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -111,18 +133,40 @@ const Navbar = () => {
               >
                 My Profile
               </Link>
+              <Link
+                to="/tasks"
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/tasks')
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                Tasks
+              </Link>
             </>
           ) : (
-            <Link
-              to="/dashboard"
-              className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive('/dashboard')
-                  ? 'bg-primary-100 text-primary-700'
-                  : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
-              }`}
-            >
-              My Profile
-            </Link>
+            <>
+              <Link
+                to="/dashboard"
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/dashboard')
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                My Profile
+              </Link>
+              <Link
+                to="/tasks"
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/tasks')
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                Tasks
+              </Link>
+            </>
           )}
         </div>
       </div>
