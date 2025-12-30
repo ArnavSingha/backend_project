@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNotification } from '../context/NotificationContext';
-import API from '../api/axios';
+import API, { invalidateApiCache } from '../api/axios';
 import Navbar from '../components/Navbar';
 import Spinner from '../components/Spinner';
 import ConfirmationModal from '../components/ConfirmationModal';
@@ -62,6 +62,9 @@ const AdminDashboard = () => {
         : `/admin/users/${selectedUser._id}/deactivate`;
       
       await API.put(endpoint);
+      
+      // Invalidate cached user list
+      invalidateApiCache('/admin/users');
       
       // Update user in local state
       setUsers((prev) =>
