@@ -55,7 +55,7 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Run frontend tests
         working-directory: ./frontend
@@ -81,11 +81,11 @@ jobs:
 
       - name: Install backend dependencies
         working-directory: ./backend
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Install frontend dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: npm ci || npm install
 
       # Add linting steps if eslint is configured
       # - name: Lint backend
