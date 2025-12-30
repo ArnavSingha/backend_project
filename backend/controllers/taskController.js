@@ -5,7 +5,7 @@ const Task = require('../models/Task');
 // @access  Private
 exports.getTasks = async (req, res) => {
   try {
-    const { status, priority, sort = '-createdAt' } = req.query;
+    const { status, priority, search, sort = '-createdAt' } = req.query;
     
     // Build query
     const query = { user: req.user._id };
@@ -16,6 +16,14 @@ exports.getTasks = async (req, res) => {
     
     if (priority && priority !== 'all') {
       query.priority = priority;
+    }
+    
+    // Search by title or description
+    if (search && search.trim()) {
+      query.$or = [
+        { title: { $regex: search.trim(), $options: 'i' } },
+        { description: { $regex: search.trim(), $options: 'i' } },
+      ];
     }
     
     const tasks = await Task.find(query).sort(sort);

@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const taskRoutes = require('./routes/taskRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/ai', aiRoutes);
 
 // 404 handler
 app.use((req, res, next) => {

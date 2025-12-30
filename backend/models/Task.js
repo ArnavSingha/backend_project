@@ -26,6 +26,21 @@ const taskSchema = new mongoose.Schema(
     dueDate: {
       type: Date,
     },
+    summary: {
+      type: String,
+      trim: true,
+      maxlength: [200, 'Summary cannot exceed 200 characters'],
+    },
+    tags: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: function(v) {
+          return v.length <= 5;
+        },
+        message: 'Cannot have more than 5 tags',
+      },
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
