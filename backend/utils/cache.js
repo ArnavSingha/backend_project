@@ -125,9 +125,19 @@ class Cache {
 // Create singleton instance
 const cache = new Cache(300); // 5 minutes default TTL
 
-// Periodic cleanup every 10 minutes
-setInterval(() => {
-  cache.cleanup();
-}, 10 * 60 * 1000);
+// Periodic cleanup every 10 minutes (skip in test environment)
+let cleanupInterval;
+if (process.env.NODE_ENV !== 'test') {
+  cleanupInterval = setInterval(() => {
+    cache.cleanup();
+  }, 10 * 60 * 1000);
+}
+
+// Export cleanup interval for manual cleanup if needed
+cache.stopCleanup = () => {
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+  }
+};
 
 module.exports = cache;

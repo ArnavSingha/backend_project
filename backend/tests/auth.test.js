@@ -1,19 +1,48 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../server'); // Adjust the path to your Express app
-const User = require('../models/User');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+
+// Set environment variables BEFORE importing app
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test_jwt_secret_key_12345';
+
+let mongoServer;
+let app;
+let User;
 
 // Test user data
 const testUser = {
   fullName: 'Test User',
-  email: 'test@example.com',
-  password: 'password123'
+  email: 'testuser@example.com',
+  password: 'Password123!'
 };
 
+beforeAll(async () => {
+  // Create MongoDB Memory Server
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+  process.env.MONGO_URI = mongoUri;
+  
+  // Connect to in-memory database
+  await mongoose.connect(mongoUri);
+  
+  // Now import app and model (they'll use the existing mongoose connection)
+  app = require('../server');
+  User = require('../models/User');
+}, 120000);
+
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+}, 60000);
+
 afterEach(async () => {
-  // Clean up the user collection after each test
-  await User.deleteMany({});
-});
+  // Clean up users after each test
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    await collections[key].deleteMany({});
+  }
+}, 30000);
 
 describe('Auth API', () => {
 
@@ -26,7 +55,7 @@ describe('Auth API', () => {
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('token');
     expect(res.body.email).toBe(testUser.email);
-  });
+  }, 30000);
 
   // Test 2: Failed login with wrong password
   test('POST /api/auth/login - Should fail with invalid credentials', async () => {
@@ -40,7 +69,7 @@ describe('Auth API', () => {
 
     expect(res.statusCode).toEqual(401);
     expect(res.body.message).toBe('Invalid email or password');
-  });
+  }, 30000);
 
   // Test 3: Successful login
   test('POST /api/auth/login - Should login successfully and return a token', async () => {
@@ -54,7 +83,7 @@ describe('Auth API', () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('token');
-  });
+  }, 30000);
 
   // Test 4: Access protected route without a token
   test('GET /api/users/profile - Should return 401 if no token is provided', async () => {
@@ -62,7 +91,7 @@ describe('Auth API', () => {
 
     expect(res.statusCode).toEqual(401);
     expect(res.body.message).toBe('Not authorized, no token');
-  });
+  }, 30000);
 
   // Test 5: Role-based access control (RBAC)
   test('GET /api/admin/users - Should return 403 for non-admin users', async () => {
@@ -81,5 +110,5 @@ describe('Auth API', () => {
 
     expect(res.statusCode).toEqual(403);
     expect(res.body.message).toContain('not authorized to access this route');
-  });
+  }, 30000);
 });
