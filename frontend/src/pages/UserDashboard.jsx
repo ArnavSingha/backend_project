@@ -16,6 +16,7 @@ const UserDashboard = () => {
   });
   const [profileErrors, setProfileErrors] = useState({});
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   // Password form state
   const [passwordData, setPasswordData] = useState({
@@ -92,6 +93,7 @@ const UserDashboard = () => {
       const updatedUser = { ...storedUser, ...profileData };
       localStorage.setItem('user', JSON.stringify(updatedUser));
       showNotification('Profile updated successfully!', 'success');
+      setIsEditingProfile(false);
     } catch (error) {
       showNotification(
         error.response?.data?.message || 'Failed to update profile',
@@ -139,22 +141,36 @@ const UserDashboard = () => {
         <div className="grid gap-8 md:grid-cols-2">
           {/* Profile Card */}
           <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-primary-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-              Profile Information
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-primary-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Profile Information
+              </h2>
+              {!isEditingProfile && (
+                <button
+                  type="button"
+                  onClick={() => setIsEditingProfile(true)}
+                  className="px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                  Edit
+                </button>
+              )}
+            </div>
 
             <form onSubmit={handleProfileSubmit} className="space-y-4">
               <div>
@@ -166,11 +182,14 @@ const UserDashboard = () => {
                   name="fullName"
                   value={profileData.fullName}
                   onChange={handleProfileChange}
+                  readOnly={!isEditingProfile}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     profileErrors.fullName
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
-                  } focus:outline-none focus:ring-2 focus:border-transparent`}
+                      : isEditingProfile
+                        ? 'border-gray-300 focus:ring-primary-500'
+                        : 'border-gray-200 bg-gray-50 cursor-default'
+                  } ${isEditingProfile ? 'focus:outline-none focus:ring-2 focus:border-transparent' : 'focus:outline-none'}`}
                 />
                 {profileErrors.fullName && (
                   <p className="mt-1 text-sm text-red-500">{profileErrors.fullName}</p>
@@ -186,31 +205,52 @@ const UserDashboard = () => {
                   name="email"
                   value={profileData.email}
                   onChange={handleProfileChange}
+                  readOnly={!isEditingProfile}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     profileErrors.email
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
-                  } focus:outline-none focus:ring-2 focus:border-transparent`}
+                      : isEditingProfile
+                        ? 'border-gray-300 focus:ring-primary-500'
+                        : 'border-gray-200 bg-gray-50 cursor-default'
+                  } ${isEditingProfile ? 'focus:outline-none focus:ring-2 focus:border-transparent' : 'focus:outline-none'}`}
                 />
                 {profileErrors.email && (
                   <p className="mt-1 text-sm text-red-500">{profileErrors.email}</p>
                 )}
               </div>
 
-              <button
-                type="submit"
-                disabled={isUpdatingProfile}
-                className="w-full py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {isUpdatingProfile ? (
-                  <>
-                    <Spinner size="sm" />
-                    <span>Saving...</span>
-                  </>
-                ) : (
-                  'Save Changes'
-                )}
-              </button>
+              {isEditingProfile && (
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileData({
+                        fullName: user?.fullName || user?.name || '',
+                        email: user?.email || '',
+                      });
+                      setProfileErrors({});
+                      setIsEditingProfile(false);
+                    }}
+                    className="flex-1 py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isUpdatingProfile}
+                    className="flex-1 py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isUpdatingProfile ? (
+                      <>
+                      <Spinner size="sm" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
+                  </button>
+                </div>
+              )}
             </form>
           </div>
 
@@ -300,20 +340,36 @@ const UserDashboard = () => {
                 )}
               </div>
 
-              <button
-                type="submit"
-                disabled={isUpdatingPassword}
-                className="w-full py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {isUpdatingPassword ? (
-                  <>
-                    <Spinner size="sm" />
-                    <span>Updating...</span>
-                  </>
-                ) : (
-                  'Change Password'
-                )}
-              </button>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPasswordData({
+                      currentPassword: '',
+                      newPassword: '',
+                      confirmPassword: '',
+                    });
+                    setPasswordErrors({});
+                  }}
+                  className="flex-1 py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdatingPassword}
+                  className="flex-1 py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isUpdatingPassword ? (
+                    <>
+                      <Spinner size="sm" />
+                      <span>Updating...</span>
+                    </>
+                  ) : (
+                    'Change Password'
+                  )}
+                </button>
+              </div>
             </form>
           </div>
         </div>

@@ -73,26 +73,17 @@ export const AuthProvider = ({ children }) => {
     }
   }, [showNotification]);
 
-  // Register function
+  // Register function - does NOT auto-login, user must log in after registration
   const register = useCallback(async (fullName, email, password) => {
     try {
       setLoading(true);
       
-      const response = await API.post('/auth/signup', { fullName, email, password });
+      await API.post('/auth/signup', { fullName, email, password });
       
-      const { token: newToken, ...userData } = response.data;
+      // Don't store token/user - require user to log in after registration
+      showNotification('Registration Successful! Please log in with your credentials.', 'success');
       
-      // Store in state
-      setToken(newToken);
-      setUser(userData);
-      
-      // Persist to localStorage
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      showNotification('Registration Successful! Welcome aboard.', 'success');
-      
-      return { success: true, user: userData };
+      return { success: true };
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
       showNotification(errorMessage, 'error');

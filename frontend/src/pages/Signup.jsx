@@ -11,6 +11,7 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register } = useAuth();
@@ -64,6 +65,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError('');
 
     if (!validateForm()) return;
 
@@ -72,7 +74,11 @@ const Signup = () => {
     setIsSubmitting(false);
 
     if (result.success) {
-      navigate('/dashboard');
+      // Redirect to login page on successful registration
+      navigate('/login');
+    } else {
+      // Display API error on the form
+      setApiError(result.error || 'Registration failed. Please try again.');
     }
   };
 
@@ -92,6 +98,13 @@ const Signup = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* API Error Message */}
+            {apiError && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-sm text-red-600 text-center">{apiError}</p>
+              </div>
+            )}
+
             {/* Name Field */}
             <div>
               <label

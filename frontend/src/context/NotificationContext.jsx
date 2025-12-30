@@ -36,7 +36,9 @@ export const NotificationProvider = ({ children }) => {
           className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out ${
             notification.type === 'success'
               ? 'bg-green-500 text-white'
-              : 'bg-red-500 text-white'
+              : notification.type === 'error'
+                ? 'bg-red-500 text-white'
+                : 'bg-blue-500 text-white'
           }`}
           style={{
             animation: 'slideIn 0.3s ease-out',
@@ -45,7 +47,7 @@ export const NotificationProvider = ({ children }) => {
           <div className="flex items-center gap-3">
             {/* Icon */}
             <span className="text-xl">
-              {notification.type === 'success' ? '✓' : '✕'}
+              {notification.type === 'success' ? '✓' : notification.type === 'error' ? '✕' : 'ℹ'}
             </span>
             
             {/* Message */}

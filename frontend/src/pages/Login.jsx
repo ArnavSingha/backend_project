@@ -9,6 +9,7 @@ const Login = () => {
     password: '',
   });
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { login } = useAuth();
@@ -44,6 +45,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError('');
 
     if (!validateForm()) return;
 
@@ -58,6 +60,9 @@ const Login = () => {
       } else {
         navigate('/dashboard');
       }
+    } else {
+      // Display API error on the form
+      setApiError(result.error || 'Login failed. Please try again.');
     }
   };
 
@@ -77,6 +82,13 @@ const Login = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* API Error Message */}
+            {apiError && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-sm text-red-600 text-center">{apiError}</p>
+              </div>
+            )}
+
             {/* Email Field */}
             <div>
               <label

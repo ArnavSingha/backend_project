@@ -1,18 +1,62 @@
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
+  const location = useLocation();
+
+  // Check if a link is active
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center">
+          {/* Logo & Navigation Links */}
+          <div className="flex items-center gap-8">
             <div className="flex-shrink-0">
               <h1 className="text-xl font-bold text-primary-600">
                 UserMS
               </h1>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="hidden sm:flex items-center gap-1">
+              {isAdmin ? (
+                <>
+                  <Link
+                    to="/admin"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/admin')
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/dashboard')
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    My Profile
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  to="/dashboard"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive('/dashboard')
+                      ? 'bg-primary-100 text-primary-700'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
+                >
+                  My Profile
+                </Link>
+              )}
             </div>
           </div>
 
@@ -41,6 +85,45 @@ const Navbar = () => {
               Logout
             </button>
           </div>
+        </div>
+
+        {/* Mobile Navigation Links */}
+        <div className="sm:hidden pb-3 flex gap-2">
+          {isAdmin ? (
+            <>
+              <Link
+                to="/admin"
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/admin')
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/dashboard"
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/dashboard')
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                My Profile
+              </Link>
+            </>
+          ) : (
+            <Link
+              to="/dashboard"
+              className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isActive('/dashboard')
+                  ? 'bg-primary-100 text-primary-700'
+                  : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+              }`}
+            >
+              My Profile
+            </Link>
+          )}
         </div>
       </div>
     </nav>
