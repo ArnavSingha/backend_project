@@ -46,6 +46,15 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
