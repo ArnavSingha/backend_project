@@ -156,7 +156,7 @@ jobs:
           echo "NODE_ENV=test" >> .env
 
       - name: Build and start services
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       - name: Wait for services to be ready
         run: |
@@ -179,8 +179,8 @@ jobs:
 
       - name: View logs on failure
         if: failure()
-        run: docker-compose logs
+        run: docker compose logs
 
       - name: Cleanup
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
