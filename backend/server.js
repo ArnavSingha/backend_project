@@ -25,11 +25,12 @@ const corsOptions = {
     
     const allowedOrigins = process.env.CORS_ORIGIN 
       ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
-      : ['http://localhost:5173', 'https://userms0.netlify.app/'];
+      : ['http://localhost:5173', 'http://localhost:5174', 'https://userms0.netlify.app'];
     
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
