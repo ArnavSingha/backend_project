@@ -103,6 +103,10 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (isMatch) {
+      // Update last login timestamp
+      user.lastLogin = new Date();
+      await user.save();
+
       res.json({
         _id: user._id,
         name: user.fullName,
@@ -111,6 +115,7 @@ exports.login = async (req, res) => {
         role: user.role,
         isActive: user.status === 'active',
         createdAt: user.createdAt,
+        lastLogin: user.lastLogin,
         token: generateToken(user._id),
       });
     } else {
@@ -136,6 +141,7 @@ exports.getMe = async (req, res) => {
       role: user.role,
       isActive: user.status === 'active',
       createdAt: user.createdAt,
+      lastLogin: user.lastLogin,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
