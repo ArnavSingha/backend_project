@@ -15,6 +15,15 @@ A full-stack User Management System with authentication, role-based access contr
 | **Backend API** | [https://backend-project-61k5.onrender.com](https://backend-project-61k5.onrender.com) |
 | **API Health Check** | [https://backend-project-61k5.onrender.com/health](https://backend-project-61k5.onrender.com/health) |
 
+### Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | admin@userms.com | Admin@123 |
+| **User** | user@userms.com | User@123 |
+
+> ⚠️ **Note:** The backend on Render's free tier may spin down after 15 minutes of inactivity. The first request may take 30-60 seconds to wake up the server.
+
 ## 📋 Project Overview & Purpose
 
 UserMS is a comprehensive user management solution that provides:
