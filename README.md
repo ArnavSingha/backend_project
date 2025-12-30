@@ -7,6 +7,14 @@ A full-stack User Management System with authentication, role-based access contr
 ![MongoDB](https://img.shields.io/badge/MongoDB-6+-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
+## 🌐 Live Demo
+
+| Component | URL |
+|-----------|-----|
+| **Frontend** | [https://userms0.netlify.app](https://userms0.netlify.app) |
+| **Backend API** | [https://backend-project-61k5.onrender.com](https://backend-project-61k5.onrender.com) |
+| **API Health Check** | [https://backend-project-61k5.onrender.com/health](https://backend-project-61k5.onrender.com/health) |
+
 ## 📋 Project Overview & Purpose
 
 UserMS is a comprehensive user management solution that provides:
@@ -169,23 +177,109 @@ GEMINI_API_KEY=your-gemini-api-key
 
 ## ☁️ Cloud Deployment
 
-### Backend (Render/Railway/Heroku)
+This project is deployed using **Render** (backend) and **Netlify** (frontend).
 
-1. Push code to GitHub
-2. Connect repository to hosting platform
-3. Set environment variables
-4. Deploy from `backend` directory
-5. Set build command: `npm install`
-6. Set start command: `npm start`
+### Backend Deployment on Render
 
-### Frontend (Vercel/Netlify)
+**Live URL:** https://backend-project-61k5.onrender.com
 
-1. Push code to GitHub
-2. Connect repository to hosting platform
-3. Set root directory to `frontend`
-4. Set build command: `npm run build`
-5. Set output directory: `dist`
-6. Add environment variable: `VITE_API_URL`
+#### Steps Taken:
+
+1. **Create Render Account**
+   - Sign up at [render.com](https://render.com)
+   - Connect GitHub account
+
+2. **Create New Web Service**
+   - Click "New" → "Web Service"
+   - Connect your GitHub repository
+   - Select the repository containing the backend code
+
+3. **Configure Build Settings**
+   ```
+   Name: backend-project
+   Region: Oregon (US West)
+   Branch: main
+   Root Directory: backend
+   Runtime: Node
+   Build Command: npm install
+   Start Command: npm start
+   ```
+
+4. **Set Environment Variables**
+   Add the following environment variables in Render dashboard:
+   ```
+   NODE_ENV=production
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/userms
+   JWT_SECRET=your-secure-jwt-secret-key
+   JWT_EXPIRE=30d
+   GEMINI_API_KEY=your-gemini-api-key
+   CORS_ORIGIN=https://userms0.netlify.app
+   ```
+
+5. **Deploy**
+   - Click "Create Web Service"
+   - Wait for the build to complete
+   - Verify deployment at `/health` endpoint
+
+#### Render Configuration Notes:
+- Free tier spins down after 15 minutes of inactivity
+- First request after spin-down may take 30-60 seconds
+- Automatic deploys on push to main branch
+
+---
+
+### Frontend Deployment on Netlify
+
+**Live URL:** https://userms0.netlify.app
+
+#### Steps Taken:
+
+1. **Create Netlify Account**
+   - Sign up at [netlify.com](https://netlify.com)
+   - Connect GitHub account
+
+2. **Import Project**
+   - Click "Add new site" → "Import an existing project"
+   - Choose GitHub and select your repository
+
+3. **Configure Build Settings**
+   ```
+   Base directory: frontend
+   Build command: npm run build
+   Publish directory: frontend/dist
+   ```
+
+4. **Set Environment Variables**
+   Go to Site settings → Environment variables → Add variable:
+   ```
+   VITE_API_URL=https://backend-project-61k5.onrender.com/api
+   ```
+
+5. **Deploy**
+   - Click "Deploy site"
+   - Wait for the build to complete
+   - Access your site at the generated Netlify URL
+
+6. **Custom Domain (Optional)**
+   - Go to Domain settings
+   - Add custom domain or use the default `.netlify.app` subdomain
+
+#### Netlify Configuration Notes:
+- Automatic deploys on push to main branch
+- Deploy previews for pull requests
+- Instant cache invalidation
+- Free SSL certificate included
+
+---
+
+### Post-Deployment Checklist
+
+- [x] Backend `/health` endpoint responds with status 200
+- [x] Frontend loads without console errors
+- [x] CORS configured to allow frontend domain
+- [x] Environment variables set correctly on both platforms
+- [x] User registration and login working
+- [x] API calls from frontend reaching backend successfully
 
 ## 📖 API Documentation
 
@@ -589,11 +683,3 @@ UserMS/
 3. Commit changes (`git commit -m 'Add amazing feature'`)
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-Built with ❤️ for the User Management System project.
